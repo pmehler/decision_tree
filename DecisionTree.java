@@ -43,12 +43,13 @@ public class DecisionTree {
 	}
 
 	private int findNextFeature(Treenode node){
-		node.setFeaturesUsed();
-		double maxInfo = 0;
+		node.setFeaturesUsed();  // Add featuresUsed array to current node
+		double maxInfo = 0;	
 		int maxInfoIndex = -1;
-		double entropy = getEntropy(node.getPos().length, node.getNeg().length);
+		// for feature nodes, entropy calculations require the number of times a feature is present in both positive and negative decisions
+		double entropy = getEntropy(node.getPos().length, node.getNeg().length);	
 		for(int i=0; i<node.featuresUsed.size(); i++){
-			if (featuresUsed[i]==False) {
+			if (featuresUsed[i]==False) {  // hasn't been added to the tree yet
 				double remainingInfo = getRemainingInfo(i, node);
 				if (remainingInfo>=maxInfo) {
 					maxInfo = remainingInfo;
