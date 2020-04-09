@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 
+//Emma Neary, Peter Mehler
+//All group members were present and contributing during all work on this project
+//We have neither given nor received unauthorized aid on this assignment
 
 public class DecisionTree {
 	TreeNode root = null;
@@ -152,6 +155,7 @@ public class DecisionTree {
 	//Computes and returns the entropy given the number of positive and
 	//negative examples.
 	private double getEntropy(double numPos, double numNeg){
+		if (numPos+numNeg==0) { return 0; } //avoid NaN division by 0
 		double probPos = numPos / (numPos+numNeg);
 		double probNeg = numNeg / (numPos+numNeg);
 		double entropy = (-1 * probPos * log2(probPos)) + (-1 * probNeg * log2(probNeg));

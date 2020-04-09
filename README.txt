@@ -1,5 +1,6 @@
 Decision Tree
 Peter Mehler and Emma Neary
+CS311 Homework 3
 
 Names of files required to run your program:
 	- DecisionTree.java
@@ -10,8 +11,7 @@ Names of files required to run your program:
 	for testing hepatitis classifier:
 	- TestClassifierHepatitis.java
 
-
-3.   Known Bugs: Final evaluation prints out twice. InfoGain() occasionally evaluates to NaN, but this does not seem to affect performance.
+3.   Known Bugs: Final evaluation prints out twice due to repetition in TestClassifier.java.
 
 4.   The discussion of results and data asked for in Part2 and Part3:
 

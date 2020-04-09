@@ -1,6 +1,9 @@
+//Emma Neary, Peter Mehler
+//All group members were present and contributing during all work on this project
+//We have neither given nor received unauthorized aid on this assignment
 
 public class TreeNode {
-	
+
 	private TreeNode parent;
 	private Example[] pos, neg;
 	boolean isLeaf, decision;
@@ -8,22 +11,22 @@ public class TreeNode {
 	TreeNode trueChild;
 	TreeNode falseChild;
 	boolean[] featuresUsed;
-	
+
 	public void setDecision(){
 		if(pos.length >= neg.length)
 			decision = true;
 		else
 			decision = false;
 	}
-	
+
 	public void setIsLeaf(){
 		if(pos.length ==0 || neg.length == 0)
 			isLeaf = true;
 		else
 			isLeaf = false;
-		
+
 	}
-	
+
 	public void setFeaturesUsed(){
 		if(parent==null){
 			featuresUsed = new boolean[pos[0].getSize()];
@@ -36,40 +39,40 @@ public class TreeNode {
 			}
 		}
 	}
-		
+
 	public void setFeature(int f){
 		feature = f;
 		featuresUsed[f] = true;
 	}
-	
+
 	public int getFeature(){
 		return feature;
 	}
-	
+
 	public void setParent(TreeNode p){
 		parent = p;
 		setFeaturesUsed();
 	}
-	
+
 	public void setPos(Example[] p)
 	{
 		pos = p;
 	}
-	
+
 	public void setNeg(Example[] n)
 	{
 		neg = n;
 	}
-	
+
 	public Example[] getPos()
 	{
 		return pos;
 	}
-	
+
 	public Example[] getNeg()
 	{
 		return neg;
 	}
-	
-	
+
+
 }
