@@ -29,10 +29,24 @@ public class DecisionTree {
 		System.out.println("Chosen feature: " + feature);
 		System.out.println();
 
+		if(feature!=-1){
+			node.setFeature(feature);
+			createSubChildren(node);
+			if (!node.trueChild.isLeaf){
+				train(node.trueChild);
+			}
+			if (!node.falseChild.isLeaf){
+				train(node.falseChild);
+			}
+		}
+		else{ // is leaf, no more features
+			node.isLeaf = true;
+			node.setDecision();
+		}
+
 
 
 		/*
-
 		if a feature, f, was found in Step 2:
 		node.setFeature(f)
 		createSubChildren(node)
@@ -47,7 +61,7 @@ public class DecisionTree {
 
 	private int findNextFeature(TreeNode node){
 		node.setFeaturesUsed();  // Add featuresUsed array to current node
-		double maxInfo = 0;
+		double maxInfo = -1;
 		int maxInfoIndex = -1;
 		// for feature nodes, entropy calculations require the number of times a feature is present in both positive and negative decisions
 		double entropy = getEntropy(node.getPos().length, node.getNeg().length);
@@ -56,7 +70,7 @@ public class DecisionTree {
 				double infoGain = entropy - getRemainingInfo(i, node);
 				System.out.println("Entropy of feature " + i + " is " + entropy);
 				System.out.println("Info gain is " + infoGain);
-				if (infoGain>=maxInfo) {
+				if (infoGain>maxInfo) {
 					maxInfo = infoGain;
 					maxInfoIndex = i;
 				}
@@ -67,6 +81,53 @@ public class DecisionTree {
 
 	//Creates the true and false children of node
 	private void createSubChildren(TreeNode node){
+		Example[] pos = node.getPos();
+		Example[] neg = node.getNeg();
+
+		TreeNode trueSubChild = new TreeNode();
+		TreeNode falseSubChild = new TreeNode();
+
+		node.trueChild = trueSubChild;
+		node.falseChild = falseSubChild;
+
+		trueSubChild.setParent(node);
+		falseSubChild.setParent(node);
+
+		ArrayList<Example> truePos = new ArrayList<>();
+		ArrayList<Example> falsePos = new ArrayList<>();
+		ArrayList<Example> trueNeg = new ArrayList<>();
+		ArrayList<Example> falseNeg = new ArrayList<>();
+
+		for(int i=0; i<pos.length; i++){
+			if(pos[i].get(node.getFeature())==true){
+				truePos.add(pos[i]);
+			}
+			else{ // falsePos
+				falsePos.add(pos[i]);
+			}
+		}
+
+		for(int i=0; i<neg.length; i++){
+			if(neg[i].get(node.getFeature())==true){
+				trueNeg.add(neg[i]);
+			}
+			else{ // falsePos
+				falseNeg.add(neg[i]);
+			}
+		}
+
+		trueSubChild.setPos(truePos.toArray(new Example[truePos.size()]));
+		trueSubChild.setNeg(trueNeg.toArray(new Example[trueNeg.size()]));
+
+		falseSubChild.setPos(falsePos.toArray(new Example[falsePos.size()]));
+		falseSubChild.setNeg(falseNeg.toArray(new Example[falseNeg.size()]));
+
+		trueSubChild.setIsLeaf();
+		falseSubChild.setIsLeaf();
+
+		trueSubChild.setDecision();
+		falseSubChild.setDecision();
+
 /*		Create true and false children - new TreeNodes
 		Set to appropriate global vars as children of node
 		Set parent to node
@@ -83,23 +144,7 @@ public class DecisionTree {
 		/*		-Assuming feature is chosen for node
 		-Calculate entropy of each possible branch value (true/false), sum with weights of proportion of cases that have that true/false value for given feature
 			-Ex. 8/12 Entropy(True) + 4/12 Entropy(False) = Remaining Info
-
-		Int trueBranchNumPos, trueBranchNumNeg = 0
-		Int falseBranchNumPos, falseBranchNumNeg = 0
-		loop through node’s pos
-		if feature is true, add to trueBranchNumPos
-		if feature if false, add to falseBranchNumPos
-		loop through node’s neg
-		if feature is true, add to trueBranchNumNeg
-		if feature if false, add to falseBranchNumNeg
-		Int totalNumPos = trueBranchNumPos+ falseBranchNumPos
-		Int totalNumNeg = trueBranchNumNeg + falseBranchNumNeg
-		posWeight = totalNumPos / (totalNumPos + totalNumNeg)
-		negWeight = totalNumNeg / (totalNumPos + totalNumNeg)
-		remainingInfo = posWeight * getEntropy(trueBranchNumPos, trueBranchNumNeg)  +
-		negWeight * getEntropy(falseBranchNumPos, falseBranchNumNeg)
-		return remainingInfo*/
-
+			*/
 
 		int trueBranchNumPos = 0;
 		int trueBranchNumNeg = 0;
@@ -121,23 +166,23 @@ public class DecisionTree {
 				falseBranchNumNeg++;
 			}
 		}
-		System.out.println("truePos: " + trueBranchNumPos);
+/*		System.out.println("truePos: " + trueBranchNumPos);
 		System.out.println("falsePos: " + falseBranchNumPos);
 		System.out.println("trueNeg: " + trueBranchNumNeg);
-		System.out.println("falseNeg: " + falseBranchNumNeg);
+		System.out.println("falseNeg: " + falseBranchNumNeg);*/
 
 		int totalNumTrue = trueBranchNumPos+ trueBranchNumNeg;
 		int totalNumFalse = falseBranchNumPos + falseBranchNumNeg;
 		double trueWeight = (double)totalNumTrue / (totalNumTrue + totalNumFalse);
 		double falseWeight = (double)totalNumFalse / (totalNumTrue + totalNumFalse);
 
-		System.out.println("trueWeight " + trueWeight);
-		System.out.println("falseWeight " + falseWeight);
+/*		System.out.println("trueWeight " + trueWeight);
+		System.out.println("falseWeight " + falseWeight);*/
 
 		double remainingInfo = trueWeight * getEntropy(trueBranchNumPos, trueBranchNumNeg)
 			+ falseWeight * getEntropy(falseBranchNumPos, falseBranchNumNeg);
 
-		System.out.println("remaining info: " + remainingInfo);
+/*		System.out.println("remaining info: " + remainingInfo);*/
 		return remainingInfo;
 	}
 
@@ -163,8 +208,17 @@ public class DecisionTree {
 
 	//Uses the tree to classify the given example as positive (true) or negative (false).
 	public boolean classify(Example e){
+		TreeNode currentNode = root;
+		while(currentNode.isLeaf==false){
+			if (e.get(currentNode.getFeature())==true){
+				currentNode = currentNode.trueChild;
+			}
+			else{ // example has false for this node's feature
+				currentNode = currentNode.falseChild;
+			}
+		}
 		//Uses the tree to classify the given example as positive (true) or negative (false).
-		return true;
+		return currentNode.decision;
 	}
 
 
