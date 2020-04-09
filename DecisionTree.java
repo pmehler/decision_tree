@@ -19,14 +19,11 @@ public class DecisionTree {
 		}
 	}
 
+
 	//The recursive train method that builds a tree at node
 	private void train(TreeNode node){
-		Example[] pos = node.getPos();
-		Example[] neg = node.getNeg();
-
 		int feature = findNextFeature(node);
-
-		if(feature!=-1){
+		if(feature!=-1){ //-1 indicates no feature found
 			node.setFeature(feature);
 			createSubChildren(node);
 			if (!node.trueChild.isLeaf){
@@ -42,14 +39,20 @@ public class DecisionTree {
 		}
 	}
 
+
+	//Finds the feature for node that would provide the greatest info gain
 	private int findNextFeature(TreeNode node){
-		node.setFeaturesUsed();  // Add featuresUsed array to current node
-		double maxInfo = -1;
-		int maxInfoIndex = -1;
-		// for feature nodes, entropy calculations require the number of times a feature is present in both positive and negative decisions
+		node.setFeaturesUsed();  //set node's featuresUsed based on parent's
+		double maxInfo = -1;     //store the max info gain
+		int maxInfoIndex = -1;   //index of feature which provided max info gain
+
+		// calculate the entropy at current node based on
+		// the number of positive and negative examples it has
 		double entropy = getEntropy(node.getPos().length, node.getNeg().length);
+
+		//calculate info gain of each potential feature
 		for(int i=0; i<node.featuresUsed.length; i++){
-			if (node.featuresUsed[i]==false) {  // hasn't been added to the tree yet
+			if (!node.featuresUsed[i]) { //not yet used in current tree path
 				double infoGain = entropy - getRemainingInfo(i, node);
 				if (infoGain>maxInfo) {
 					maxInfo = infoGain;
@@ -60,6 +63,7 @@ public class DecisionTree {
 		return maxInfoIndex;  // -1 if no more features
 	}
 
+
 	//Creates the true and false children of node
 	private void createSubChildren(TreeNode node){
 		Example[] pos = node.getPos();
@@ -67,57 +71,49 @@ public class DecisionTree {
 
 		TreeNode trueSubChild = new TreeNode();
 		TreeNode falseSubChild = new TreeNode();
-
 		node.trueChild = trueSubChild;
 		node.falseChild = falseSubChild;
-
 		trueSubChild.setParent(node);
 		falseSubChild.setParent(node);
 
+		//Generate appropriate pos and neg sets for each child
 		ArrayList<Example> truePos = new ArrayList<>();
 		ArrayList<Example> falsePos = new ArrayList<>();
 		ArrayList<Example> trueNeg = new ArrayList<>();
 		ArrayList<Example> falseNeg = new ArrayList<>();
-
 		for(int i=0; i<pos.length; i++){
-			if(pos[i].get(node.getFeature())==true){
+			if(pos[i].get(node.getFeature())){
 				truePos.add(pos[i]);
 			}
 			else{ // falsePos
 				falsePos.add(pos[i]);
 			}
 		}
-
 		for(int i=0; i<neg.length; i++){
-			if(neg[i].get(node.getFeature())==true){
+			if(neg[i].get(node.getFeature())){
 				trueNeg.add(neg[i]);
 			}
 			else{ // falsePos
 				falseNeg.add(neg[i]);
 			}
 		}
-
 		trueSubChild.setPos(truePos.toArray(new Example[truePos.size()]));
 		trueSubChild.setNeg(trueNeg.toArray(new Example[trueNeg.size()]));
-
 		falseSubChild.setPos(falsePos.toArray(new Example[falsePos.size()]));
 		falseSubChild.setNeg(falseNeg.toArray(new Example[falseNeg.size()]));
 
 		trueSubChild.setIsLeaf();
 		falseSubChild.setIsLeaf();
-
 		trueSubChild.setDecision();
 		falseSubChild.setDecision();
 	}
 
+
 	//Computes and returns the remaining info needed if feature is chosen
 	//at node.
 	private double getRemainingInfo(int feature, TreeNode node){
-		/*		-Assuming feature is chosen for node
-		-Calculate entropy of each possible branch value (true/false), sum with weights of proportion of cases that have that true/false value for given feature
-			-Ex. 8/12 Entropy(True) + 4/12 Entropy(False) = Remaining Info
-			*/
-
+		// Count the size of current node's examples sorted into appropriate
+		// pos and neg sets for both true and false branches
 		int trueBranchNumPos = 0;
 		int trueBranchNumNeg = 0;
 		int falseBranchNumPos = 0;
@@ -139,16 +135,19 @@ public class DecisionTree {
 			}
 		}
 
+		//Calculate weights of each child branch based on number of examples
 		int totalNumTrue = trueBranchNumPos+ trueBranchNumNeg;
 		int totalNumFalse = falseBranchNumPos + falseBranchNumNeg;
 		double trueWeight = (double)totalNumTrue / (totalNumTrue + totalNumFalse);
 		double falseWeight = (double)totalNumFalse / (totalNumTrue + totalNumFalse);
 
+		//Sum entropy of children nodes to get remaining info
 		double remainingInfo = trueWeight * getEntropy(trueBranchNumPos, trueBranchNumNeg)
 			+ falseWeight * getEntropy(falseBranchNumPos, falseBranchNumNeg);
 
 		return remainingInfo;
 	}
+
 
 	//Computes and returns the entropy given the number of positive and
 	//negative examples.
@@ -159,11 +158,13 @@ public class DecisionTree {
 		return entropy;
 	}
 
+
 	//Computes and returns the log (base 2) of d. Used by the getEntropy method.
 	private double log2(double d){
 		if (d==0){ return 0; }
 		return Math.log(d)/Math.log(2);
 	}
+
 
 	//Uses the tree to classify the given example as positive (true) or negative (false).
 	public boolean classify(Example e){
@@ -207,6 +208,7 @@ public class DecisionTree {
 			printTree(node.falseChild, indent+1);
 		}
 	}
+
 
 	//Called by printTree to print out indentations.
 	private void doIndents(int indent){

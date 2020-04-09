@@ -1,8 +1,9 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
 {\fonttbl\f0\fswiss\fcharset0 Helvetica;}
 {\colortbl;\red255\green255\blue255;}
-\margl1440\margr1440\vieww10800\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww12840\viewh8320\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
 \f0\fs24 \cf0 // This is the data set for the hepatitis.\
 // The goal is to predict whether a patient survived or died from\
@@ -16,28 +17,38 @@
 \
 // A listing of the features and their possible values.\
 // All features are binary.\
-age_lte_30\
-age_betw_31_50 \
-age_gt_50 \
-male \
-steroid\
-antivirals\
-fatigue\
-malaise \
-anorexia\
-liver_big\
-liver_firm\
-spleen_palpable \
-spiders\
-ascites\
-varices\
-bilirubin_lte_2.9\
-alk_phosphate_lte_127\
-sgot_lte_59\
-sgot_betw_60_156\
-sgot_gt_156\
-albumin_lte_3.85\
-histology\
+0) age_lte_30\
+1) age_betw_31_50 \
+2) age_gt_50 \
+3) male \
+4) steroid\
+5) antivirals\
+6) fatigue\
+7) malaise \
+8) anorexia\
+9) liver_big\
+10) liver_firm\
+11) spleen_palpable \
+12) spiders\
+13) ascites\
+14) varices (late stage symptom)\
+15) bilirubin_lte_2.9\
+16) alk_phosphate_lte_127\
+17) sgot_lte_59\
+18) sgot_betw_60_156\
+19) sgot_gt_156\
+20) albumin_lte_3.85\
+21) histology\
+\
+The decision tree first classifies patients first by whether they have varices, which is a late stage symptom of the disease, so likely provides significant information about how severe it is. If this symptom is present, the tree considers a number of other test results such as sgot levels, liver size, and bilirubin levels. Depending on if a feature is true or false, the tree either continues looking at other features of a patient or it classifies them as surviving (positive) or dying (negative). When a feature was false, tree is likely to immediately classify patients as surviving, but not always. If a feature was true then the tree tends to consider other features before making its final classification. \
+\
+Overall, the tree took the most decisive symptoms first to determine whether patients survive or not (features which were shared by most surviving patients shared or by most deceased patients). Then, to further classify patients, it split them into groups based on the presence of certain symptoms and demographics, until these groups\'92 status could be predicted based on the training data. \
+\pard\pardeftab720\ri0\partightenfactor0
+\cf0 \
+The trained decision tree correctly classified 86.5% of test cases, and produced 4 false negatives and 3 false positives out of 52 test cases. \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\
 \
 // There are two possible output labels.\
 survived: positive\
