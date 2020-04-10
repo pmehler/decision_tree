@@ -11,9 +11,7 @@ Names of files required to run your program:
 	for testing hepatitis classifier:
 	- TestClassifierHepatitis.java
 
-3.   Known Bugs: Final evaluation prints out twice due to repetition in TestClassifier.java.
-
-4.   The discussion of results and data asked for in Part2 and Part3:
+Known Bugs: Final evaluation prints out twice due to repetition in TestClassifier.java.
 
 ---------- Part 2 ----------
 Running the TestClassifier on big set one evaluates to:
@@ -68,7 +66,7 @@ Running the TestClassifier on the heart disease evaluates to:
 	Positive examples correct: 57 out of 68
 	Negative examples correct: 46 out of 68
 	Percentage of examples correctly classified: 76%
-	False positives: 12
-	False negatives: 6
+	False positives: 22
+	False negatives: 11
 
-The decision tree performs fairly well on the data by correctly classifying 82% of 100 test examples. The data was originally not binary, so some features were converted to true/false values rather than specific numeric values. Thus if the  classifier were non-binary, it is likely that the classifications would have been even more accurate.
+The decision tree performs fairly well on the data by correctly classifying 76% of 100 test examples. The data was originally not binary, so some features were converted to true/false values rather than specific numeric values. Thus if the  classifier were non-binary, it is likely that the classifications would have been even more accurate. The first feature considered relates to the ST segment, a part of the cardiac cycle, and then the tree considers other physical indicators of heart health as well as demographics and general health indicators such as cholesterol. 
