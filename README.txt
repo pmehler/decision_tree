@@ -47,4 +47,28 @@ Running the TestClassifierHepatitis on hepatitis dataset evaluates to:
 
 
 --------- Part 3 ----------
-https://www.kaggle.com/cherngs/heart-disease-cleveland-uci
+
+Dataset name: Heart Disease Cleveland UCI
+
+Dataset source:
+	Kaggle Dataset taken from Cleveland UCI archive
+	https://www.kaggle.com/cherngs/heart-disease-cleveland-uci
+
+Dataset description:
+	The Heart Disease Cleveland UCI dataset is a collection of patient records with symptoms related to cardiovascular disease.   Each feature is either related to the demographics of the patient or a measurement of their body related to the cardiovascular system.  The outcomes predicted are:  Positive, has heart disease, and Negative, does not have heart disease.
+
+Number of examples in the dataset: 272
+
+Number of features for each example: 13
+
+Tree Performance:
+
+Running the TestClassifier on the heart disease evaluates to:
+
+	Positive examples correct: 57 out of 68
+	Negative examples correct: 46 out of 68
+	Percentage of examples correctly classified: 76%
+	False positives: 12
+	False negatives: 6
+
+The decision tree performs fairly well on the data by correctly classifying 82% of 100 test examples. The data was originally not binary, so some features were converted to true/false values rather than specific numeric values. Thus if the  classifier were non-binary, it is likely that the classifications would have been even more accurate.

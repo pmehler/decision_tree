@@ -24,7 +24,6 @@ public class TreeNode {
 			isLeaf = true;
 		else
 			isLeaf = false;
-
 	}
 
 	public void setFeaturesUsed(){

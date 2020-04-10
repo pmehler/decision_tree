@@ -13,7 +13,7 @@ public class TestClassifier {
     // Constants to use
     static int exampleCount;
     static int featureCount;
- 
+
     // Process arguments.
     public static void main(String[] args) throws FileNotFoundException {
 
@@ -45,6 +45,11 @@ public class TestClassifier {
     		else
     			System.out.println("Usage: java TestClassifier set1|set2 small|big");
     	}
+      else if(args[0].equals("heart")){
+        exampleCount = 68;
+        featureCount = 13;
+        testClassifier("_heart", "disease");
+      }
     	else
     	    System.out.println("Usage: java TestClassifier set1|set2 small|big");
         }
@@ -56,11 +61,14 @@ public class TestClassifier {
 	// Generate training examples
 	//Example[] trainPos = makeExamples(true, dataset);
 	//Example[] trainNeg = makeExamples(false, dataset);
-	
+
+
+
     Example[] trainPos = loadExamples("train_pos"+dataset+"-"+size+".txt");
     Example[] trainNeg = loadExamples("train_neg"+dataset+"-"+size+".txt");
-    
-	
+
+
+
 	// Train the tree
 	DecisionTree tree = new DecisionTree();
 	tree.train(trainPos, trainNeg);
@@ -75,7 +83,7 @@ public class TestClassifier {
 	// Read or generate testing examples
 	//Example[] testPos = makeExamples(true, dataset);
 	//Example[] testNeg = makeExamples(false, dataset);
-	
+
 	Example[] testPos = loadExamples("test_pos"+dataset+"-"+size+".txt");
 	Example[] testNeg = loadExamples("test_neg"+dataset+"-"+size+".txt");
 
@@ -93,13 +101,13 @@ public class TestClassifier {
 		correct++;
 	System.out.println("Negative examples correct: "+correct+" out of "+testNeg.length);
 	System.out.println();
-	
+
 	 //Prune and display the tree
 	 /*tree.prune(tunePos, tuneNeg);
 	 System.out.println("PRUNNED TREE");
 	 tree.print();
 	 */
-	
+
 	// Evaluate on positives
 		correct = 0;
 		for (Example e : testPos)
@@ -115,37 +123,40 @@ public class TestClassifier {
 		System.out.println("Negative examples correct: "+correct+" out of "+testNeg.length);
 		System.out.println();
 
-	
+
     }
 
     /*********************************************
      * Methods to generate sets of fake examples.
-     * @throws FileNotFoundException 
+     * @throws FileNotFoundException
      */
 
     private static Example[] loadExamples(String file) throws FileNotFoundException
     {
     	Example[] exs = new Example[exampleCount];
-    	
+
     	Scanner scan = new Scanner(new File(file));
-    
+
     	for(int i=0; i<exampleCount; i++){
-    		
+
     		exs[i] = new Example(featureCount);
-    		
+
     		for(int j=0; j<featureCount; j++){
-    			if(scan.hasNextBoolean())
-    				exs[i].set(j, scan.nextBoolean());
+    			if(scan.hasNextBoolean()){
+            boolean nextBool = scan.nextBoolean();
+            //System.out.println("next bool: " + nextBool);
+    				exs[i].set(j, nextBool);
+          }
     		}
     	}
-    	
+
     	scan.close();
-    	
-    	return exs; 
+
+    	return exs;
     }
-    
-    
-    
+
+
+
     // Make an array of fake examples.
     private static Example[] makeExamples(boolean positive, String dataset) {
 
@@ -167,7 +178,7 @@ public class TestClassifier {
 	Example e = new Example(featureCount);
 	for (int j=0; j<featureCount; j++)
 	    e.set(j, rand.nextBoolean());
-	
+
 	// Create the positive pattern: feature 3, 7, or 4 is true
 	// Always do this for both datasets
 	int r = rand.nextInt(3);
@@ -206,6 +217,6 @@ public class TestClassifier {
 
 	return e;
     }
-    
-    
+
+
 }
